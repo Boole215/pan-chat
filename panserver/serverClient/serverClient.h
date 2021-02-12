@@ -1,20 +1,20 @@
 #pragma once
 
 #include <string>
-#include "coord.h"	
+#include "coord.h"
 
 namespace PanChat{
 
-	class ServerClient{
+    class ServerClient{
 
-	private:
-		int userIP;
+    private:
+        int userIP;
 
-		coord location;
+        coord location;
 
-		std::string name;
+        std::string name;
 
 
 
-	};
+    };
 }

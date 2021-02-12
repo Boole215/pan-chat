@@ -8,37 +8,37 @@
 #   include <string>
 #   pragma comment(lib, "ws2_32.lib")
 #else
-    // TODO: look into changing socket import based on OS. 
+    // TODO: look into changing socket import based on OS.
 #endif
 namespace PanChat{
 
-	class Client{
+    class Client{
 
-	private:
-		char* serverAddr;
-		short port;
+    private:
+        char* serverAddr;
+        short port;
         sockaddr_in ClientAddr;
-		
-		//user location in grid
-		coord location;
-		
-		string username;
+
+        //user location in grid
+        coord location;
+
+        string username;
 
     public:
         Client(char* serverIP);
-		//routine that awaits data from server
-		void awaitData();
+        //routine that awaits data from server
+        void awaitData();
 
-		//sends new coords to server
-		void sendCoord();
+        //sends new coords to server
+        void sendCoord();
 
-		//sends audio input to server
-		void sendComms();
+        //sends audio input to server
+        void sendComms();
 
         //generic send method
         void sendPkt(char* sendBuf);
-        
 
-	};
+
+    };
 
 }
