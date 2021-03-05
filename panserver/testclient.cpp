@@ -7,6 +7,7 @@ using boost::asio::ip::udp;
 
 int main(int argc, char* argv[]){
 
+
   try{
     // Where argc is the # of parameters added to the program execution
     // and argv is an array containing the parameters
@@ -22,16 +23,21 @@ int main(int argc, char* argv[]){
     udp::resolver resolver(io);
 
     //the "daytime" identifies the purpose of the server/"service"
-    udp::endpoint host_endpoint = *resolver.resolve(udp::v4(), argv[1], "daytime").begin();
+    //udp::endpoint host_endpoint = *resolver.resolve(udp::v4(), argv[1], "daytime").begin();
+    // Or we can try this? :
+    udp::endpoint host_endpoint = udp::endpoint(boost::asio::ip::address::from_string("192.168.1.6"), 1025);
 
+    std::cout << "endpoint established" << std::endl;
     udp::socket socket(io);
     socket.open(udp::v4());
+    std::cout << "socket opened" << std::endl;
 
     boost::array<char, 1> send_buf = {{ 0 }};
     socket.send_to(boost::asio::buffer(send_buf), host_endpoint);
-
+    std::cout << "packet sent" << std::endl;
     boost::array<char, 128> recv_buf;
     udp::endpoint sender_endpoint;
+    std::cout << "Awaiting daytime packet" << std::endl;
     size_t len = socket.receive_from(boost::asio::buffer(recv_buf),
 				     sender_endpoint);
 
