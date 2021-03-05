@@ -10,6 +10,9 @@ int main(int argc, char* argv[]){
   try{
     // Where argc is the # of parameters added to the program execution
     // and argv is an array containing the parameters
+
+    std::cout << "argc is: " << argc << std::endl;
+
     if (argc != 2){
       std::cerr << "Usage: client <host>" << std::endl;
       return 1;

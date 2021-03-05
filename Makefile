@@ -1,7 +1,7 @@
 panserverloc = ./panserver/panServer
 boostloc = /home/reined/boost_1_75_0/stage/lib
 
-all: server testserver clean
+all: server testserver testclient clean
 
 server: panServer.o main.o testserver.o
 	g++ -I ~/boost_1_75_0 panServer.o main.o  -lpthread -lboost_thread -o server
