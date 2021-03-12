@@ -7,7 +7,7 @@ using boost::asio::ip::udp;
 
 int main(int argc, char* argv[]){
 
-
+  //argv should be: [./testserver serverIP messageSize]
   try{
     // Where argc is the # of parameters added to the program execution
     // and argv is an array containing the parameters
@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
       std::cerr << "Usage: client <host>" << std::endl;
       return 1;
     }
+    std::string inputMsg = argv[2];
     std::string inputIP = argv[1];
     boost::asio::io_context io;
     udp::resolver resolver(io);
@@ -27,13 +28,15 @@ int main(int argc, char* argv[]){
     // Or we can try this? :
     udp::endpoint host_endpoint = udp::endpoint(boost::asio::ip::address::from_string(inputIP), 1025);
 
-    std::cout << "endpoint established" << std::endl;
+    std::cout << "endpoint established with: " << inputIP << ":1025" << std::endl;
     udp::socket socket(io);
     socket.open(udp::v4());
     std::cout << "socket opened" << std::endl;
 
-    boost::array<char, 1> send_buf = {{ 0 }};
-    socket.send_to(boost::asio::buffer(send_buf), host_endpoint);
+    //boost::array<char, 1> send_buf = {{ 0 }};
+    //boost::asio::buffer send_buf(finputMsg);
+
+    socket.send_to(boost::asio::buffer(inputMsg), host_endpoint);
     std::cout << "packet sent" << std::endl;
     boost::array<char, 128> recv_buf;
     udp::endpoint sender_endpoint;

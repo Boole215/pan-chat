@@ -24,3 +24,5 @@ testclient
 testserver
 
 structs/coord.h.gch
+
+*.save

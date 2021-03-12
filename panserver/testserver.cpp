@@ -35,6 +35,8 @@ class udp_server{
 
     if(!error){
       std::cout << "Currently inside handle_receive" << std::endl;
+      // boost::shared_ptr<std::string> printThis = new std::string(recv_buffer_);
+      std::cout << recvToString()  << std::endl;
       boost::shared_ptr<std::string> message(new std::string(make_daytime_string()));
       socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
 			    boost::bind(&udp_server::handle_send, this, message,
@@ -49,9 +51,17 @@ class udp_server{
 		   std::size_t /* bytes_transferred*/){
 
   }
+
+  std::string recvToString(){
+    std::string outputString;
+    for(char c: recv_buffer_){
+      outputString.push_back(c);
+    }
+    return outputString;
+  }
   udp::socket socket_;
   udp::endpoint remote_endpoint_;
-  boost::array<char, 1> recv_buffer_;
+  boost::array<char, 128> recv_buffer_;
 
 
 
