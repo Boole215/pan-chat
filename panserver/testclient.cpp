@@ -14,8 +14,8 @@ int main(int argc, char* argv[]){
 
     std::cout << "argc is: " << argc << std::endl;
 
-    if (argc != 2){
-      std::cerr << "Usage: client <host>" << std::endl;
+    if (argc != 3){
+      std::cerr << "Usage: client <host> <message (no spaces)>" << std::endl;
       return 1;
     }
     std::string inputMsg = argv[2];
