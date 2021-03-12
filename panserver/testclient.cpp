@@ -18,14 +18,14 @@ int main(int argc, char* argv[]){
       std::cerr << "Usage: client <host>" << std::endl;
       return 1;
     }
-
+    std::string inputIP = argv[1];
     boost::asio::io_context io;
     udp::resolver resolver(io);
 
     //the "daytime" identifies the purpose of the server/"service"
     //udp::endpoint host_endpoint = *resolver.resolve(udp::v4(), argv[1], "daytime").begin();
     // Or we can try this? :
-    udp::endpoint host_endpoint = udp::endpoint(boost::asio::ip::address::from_string("192.168.1.3"), 1025);
+    udp::endpoint host_endpoint = udp::endpoint(boost::asio::ip::address::from_string(inputIP), 1025);
 
     std::cout << "endpoint established" << std::endl;
     udp::socket socket(io);

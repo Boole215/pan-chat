@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
 #include <boost/array.hpp>
-
 
 using boost::asio::ip::udp;
 
@@ -13,33 +13,63 @@ std::string make_daytime_string()
   return ctime(&now);
 }
 
+class udp_server{
+  public:
+  udp_server(boost::asio::io_context& io_context)
+    :socket_(io_context, udp::endpoint(udp::v4(), 1025)){
+    std::cout << "starting start_receive" << std::endl;
+    start_receive();
+  }
+  private:
+  void start_receive(){
+    std::cout << "Starting asynchronous method" << std::endl;
+    socket_.async_receive_from(boost::asio::buffer(recv_buffer_), remote_endpoint_,
+      boost::bind(&udp_server::handle_receive, this,
+		  boost::asio::placeholders::error,
+		  boost::asio::placeholders::bytes_transferred));
+    std::cout << "Asynchronous loop added to io_context" << std::endl;
+  }
 
+  void handle_receive(const boost::system::error_code& error,
+		      std::size_t /*bytes_transferred*/){
+
+    if(!error){
+      std::cout << "Currently inside handle_receive" << std::endl;
+      boost::shared_ptr<std::string> message(new std::string(make_daytime_string()));
+      socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
+			    boost::bind(&udp_server::handle_send, this, message,
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred));
+      start_receive();
+    }
+  }
+
+  void handle_send(boost::shared_ptr<std::string> /*message*/,
+		   const boost::system::error_code& /*error*/,
+		   std::size_t /* bytes_transferred*/){
+
+  }
+  udp::socket socket_;
+  udp::endpoint remote_endpoint_;
+  boost::array<char, 1> recv_buffer_;
+
+
+
+};
 
 int main(){
 
-  std::cout << "I start" << std::endl;
   try{
-      boost::asio::io_context io;
-      udp::socket socket(io, udp::endpoint(udp::v4(), 1025));
-      std::cout << "Socket setup at 1025" << std::endl;
-      for(;;){
-	boost::array<char, 1> recv_buf;
-	udp::endpoint remote_endpoint;
-	std::cout << "Awaiting connection" << std::endl;
-	//receive_from populates the remote_endpoint object.
-	socket.receive_from(boost::asio::buffer(recv_buf), remote_endpoint);
-	std::cout << "Accepted connection" << std::endl;
-	std::string message = make_daytime_string();
-	std::cout << "daytime message created" << std::endl;
-	boost::system::error_code ignored_error;
-	socket.send_to(boost::asio::buffer(message),
-		       remote_endpoint, 0, ignored_error);
-      }
+    boost::asio::io_context io;
+    std::cout << "io context created" << std::endl;
+    udp_server server(io);
+    std::cout << "server created" << std::endl;
 
-    }
-  catch (std::exception& e){
+    io.run();
+
+  } catch(std::exception& e){
+
     std::cerr << e.what() << std::endl;
   }
-
   return 0;
 }
