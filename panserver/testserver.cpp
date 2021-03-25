@@ -23,6 +23,7 @@ class udp_server{
   private:
   void start_receive(){
     std::cout << "Starting asynchronous method" << std::endl;
+    recv_buffer_ = {{0}};
     socket_.async_receive_from(boost::asio::buffer(recv_buffer_), remote_endpoint_,
       boost::bind(&udp_server::handle_receive, this,
 		  boost::asio::placeholders::error,
@@ -61,7 +62,7 @@ class udp_server{
   }
   udp::socket socket_;
   udp::endpoint remote_endpoint_;
-  boost::array<char, 128> recv_buffer_;
+  boost::array<char, 128> recv_buffer_ = {{0}};
 
 
 

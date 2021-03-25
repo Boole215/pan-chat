@@ -26,3 +26,9 @@ testserver
 structs/coord.h.gch
 
 *.save
+
+appComms
+
+appComms.cpp
+
+appMovement

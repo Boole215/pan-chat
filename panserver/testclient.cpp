@@ -5,6 +5,30 @@
 
 using boost::asio::ip::udp;
 
+class udp_client{
+  public:
+  udp_client(boost::asio::io_context& io, std::string serverIP, int serverPort)
+    :socket_(io),
+     server_(udp::endpoint(boost::asio::ip::address::from_string(serverIP), serverPort))
+  {
+    socket_.open(udp::v4());
+  }
+
+  void sendPacket(std::string sendMsg){
+    socket_.send_to(boost::asio::buffer(sendMsg), server_);
+  }
+
+  void recvPacket(){
+    // TODO! Use the server as an example.
+    // consider: how are we going to use the app's main event loop
+    // in tandem with the client async operations?
+    // Maybe make the app a function in the client??
+  }
+  private:
+  udp::socket socket_;
+  udp::endpoint server_;
+};
+
 int main(int argc, char* argv[]){
 
   //argv should be: [./testserver serverIP messageSize]
