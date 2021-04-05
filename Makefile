@@ -20,6 +20,9 @@ testserver: testserver.o
 testclient: testclient.o
 	g++ -I ~/boost_1_75_0 testclient.o -lpthread -lboost_thread -o testclient
 
+testrecording: testrecording.o
+	g++  appRecording.o -o testrecording
+
 appComms.o:
 	g++ -ggdb -Wall -Wextra -L ${localib} -I ${localinc} -lpthread -lIrrKlang -c ./appComms.cpp
 
@@ -31,6 +34,9 @@ testclient.o: ./panserver/testclient.cpp
 
 testserver.o: ./panserver/testserver.cpp
 	g++ -I ~/boost_1_75_0 ${debugflag} -c ./panserver/testserver.cpp
+
+testrecording.o: appRecording.cpp
+	g++ ${debugflag} -c ./appRecording.cpp
 
 panServer.o: ${panserverloc}/panServer.cpp
 	g++ -I ~/boost_1_75_0 ${debugflag} -c ${panserverloc}/panServer.cpp
