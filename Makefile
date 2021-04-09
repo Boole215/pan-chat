@@ -21,7 +21,7 @@ testclient: testclient.o
 	g++ -I ~/boost_1_75_0 testclient.o -lpthread -lboost_thread -o testclient
 
 testrecording: testrecording.o
-	g++  appRecording.o -o testrecording
+	g++  appRecording.o -o testrecording -lopenal
 
 appComms.o:
 	g++ -ggdb -Wall -Wextra -L ${localib} -I ${localinc} -lpthread -lIrrKlang -c ./appComms.cpp
