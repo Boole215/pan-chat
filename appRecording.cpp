@@ -1,5 +1,5 @@
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <iostream>
 using namespace std;
 
