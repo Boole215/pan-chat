@@ -1,65 +1,28 @@
-#include "RtAudio.h"
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
 #include <iostream>
-#include <cstdlib>
-#include <cstring>
+using namespace std;
 
-int record( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-	    double streamTime, RtAudioStreamStatus status, void *userDara)
-{
-  if(status){
-    std::cout << "Stream overflow detected!" << std::endl;
+const int SRATE = 44100;
+const int SSIZE = 1024;
+
+ALbyte buffer[22050];
+ALint sample;
+
+int main(int argc, char *argv[]){
+  alGetError();
+  ALCdevice *device = alcCaptureOpenDevice(NULL, SRATE, AL_FORMAT_STEREO16, SSIZE);
+  if(alGetError() !=AL_NO_ERROR){
+    return 0;
+  }
+  alcCaptureStart(device);
+
+  while (true){
+    alcGetIntegerv(device, ALC_CAPTURE_SAMPES< (ALCsizei)sizeof(ALint), &sample);
+    alcCaptureSamples(device, (ALCvoid *)buffer, sample);
+
   }
 
-
-  double* inputAudio = (double *)inputBuffer;
-  std::cout << inputAudio[0] << std::endl;
-  // input buffer is where the voice data is, do something with it!
-
-  return 0;
-
-}
-
-int main()
-{
-  RtAudio adc;
-  if( adc.getDeviceCount() < 1){
-    std::cout << "\nNo audio devices found!\n";
-    exit( 0 );
-  }
-
-  RtAudio::StreamParameters parameters;
-  parameters.deviceId = adc.getDefaultInputDevice();
-  parameters.nChannels = 2;
-  parameters.firstChannel = 0;
-  unsigned int sampleRate = 44100;
-  unsigned int bufferFrames = 256; // 256 sample frames
-
-  try{
-    adc.openStream( NULL, &parameters, RTAUDIO_SINT16,
-		    sampleRate, &bufferFrames, &record );
-    adc.startStream();
-  }
-  catch ( RtAudioError& e){
-    e.printMessage();
-    exit( 0 );
-  }
-
-  char input;
-  std::cout << "\n Recording ... press <enter> to quit.\n";
-  std::cin.get( input );
-
-  try {
-    // Stop the stream
-    adc.stopStream();
-  }
-
-  catch (RtAudioError& e){
-    e.printMessage();
-  }
-
-  if ( adc.isStreamOpen() ){
-    adc.closeStream();
-  }
-
-  return 0;
+  alcCaptureStop(device);
+  alcCaptureCloseDevice(device);
 }
