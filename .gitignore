@@ -32,3 +32,5 @@ appComms
 appComms.cpp
 
 appMovement
+
+testOpenAL.cpp

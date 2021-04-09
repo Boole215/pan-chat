@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
   alcCaptureStart(device);
 
   while (true){
-    alcGetIntegerv(device, ALC_CAPTURE_SAMPES< (ALCsizei)sizeof(ALint), &sample);
+    alcGetIntegerv(device, ALC_CAPTURE_SAMPLES, (ALCsizei)sizeof(ALint), &sample);
     alcCaptureSamples(device, (ALCvoid *)buffer, sample);
 
   }
